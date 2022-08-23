@@ -1,0 +1,26 @@
+{# ナビゲーションバー#}
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        <div>
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bootstrap-fill" style="font-size: 2rem;"></i>
+            </a>
+        </div>
+        <div class="flex-grow-1" style="max-width:500px;">
+
+        </div>
+        <div class="text-light nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{user.username}}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/webapp">管理画面</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="{% url 'webapp:logout' %}">ログアウト</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

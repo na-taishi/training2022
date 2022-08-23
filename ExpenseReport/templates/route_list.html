@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}経路一覧{% endblock %}
+
+{% block contents %}
+<div>
+    {% include 'navigationbar.html' %}
+</div>
+<h2>経路一覧</h2>
+<div>
+    <a href="{% url 'webapp:expense_report' %}">メイン</a>
+</div>
+<table class="table table-striped table-bordered">
+    {% csrf_token %}
+    <tr>
+        {% for col in header %}
+        <th scope="col">
+            {{ col }}
+        </th>
+        {% endfor %}
+    </tr>
+    {% for route in object_list %}
+    <tr>
+        <div class="col-sm-4">
+            <td>{{ route }}</td>
+            <td>{{ route.transportation_id }}</td>
+            <td>{{ route.fare }}円 </td>
+            <td>
+                <button type="button" name="btn_route_update" class="btn btn-primary" data-bs-toggle="modal"
+                    data-id="{{ route.pk }}" data-target="{{ route }}" data-departure-point="{{ route.departure_point}}" 
+                    data-arrival-point="{{ route.arrival_point}}" data-transportation="{{ route.transportation}}" 
+                    data-fare="{{ route.fare }}" data-bs-target="#input-modal" onclick="update_route_bt(event)">
+                    更新
+                </button>
+            </td>
+            <td>
+                <button type="button" name="btn_route_update" class="btn btn-primary" data-bs-toggle="modal"
+                    data-id="{{ route.pk }}" data-target="{{ route }}" data-bs-target="#delete_modal"
+                    onclick="delete_route_bt(event)">
+                    削除
+                </button>
+            </td>
+        </div>
+    </tr>
+    {% endfor %}
+</table>
+<button type="button" name="btn_route_add" class="btn btn-primary" data-bs-toggle="modal" data-target="{{ route }}"
+    data-bs-target="#input-modal" onclick="add_route_bt(event)">追加</button>
+<!-- モーダルウィンドウ -->
+<div>
+    {% include 'route_input_modal.html' %}
+</div>
+<div>
+    {% include 'route_delete_modal.html' %}
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    function add_route_bt(event) {
+        document.getElementById("input_route_id").value = 0 ;
+        const route_name = event.currentTarget.dataset['target'];
+        document.getElementById("input-modal-label").textContent = "経路追加";
+    }
+
+    function update_route_bt(event) {
+        // 対象のid
+        const route_id = event.currentTarget.dataset['id'];
+        document.getElementById("input_route_id").value = route_id ;
+        // 経路名
+        const route_name = event.currentTarget.dataset['target'];
+        document.getElementById("input-modal-label").textContent = route_name;
+        // 出発地点
+        const route_departure_point = event.currentTarget.dataset['departurePoint'];
+        document.getElementById("id_departure_point").value = route_departure_point;
+        // 到着地点
+        const route_arrival_point = event.currentTarget.dataset['arrivalPoint'];
+        document.getElementById("id_arrival_point").value = route_arrival_point;
+        // 交通機関
+        const route_transportation = event.currentTarget.dataset['transportation'];
+        document.getElementById("id_transportation").value = route_transportation;
+        // 金額
+        const route_fare = event.currentTarget.dataset['fare'];
+        document.getElementById("id_fare").value = route_fare;
+    }
+
+    function delete_route_bt(event) {
+        const route_id = event.currentTarget.dataset['id'];
+        const route_name = event.currentTarget.dataset['target'];
+        document.getElementById("delete_modal_label").textContent = route_name;
+        document.getElementById("delete_route_id").value = route_id;
+    }
+</script>
+{% endblock %}

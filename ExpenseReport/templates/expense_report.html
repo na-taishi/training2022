@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}清算書{% endblock %}
+
+{% block contents %}
+<div>
+    {% include 'navigationbar.html' %}
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+            <a href="/expense-report/?date={{ date }}&val=-1">前月</a>
+        </div>
+        <div class="col-2">
+            <h4 >{{ date_month }}</h4>
+        </div>
+        <div class="col-2">
+            <a href="/expense-report/?date={{ date }}&val=1">翌月</a>
+        </div>
+    </div>
+</div>
+</div>
+<div>
+    <a href="{% url 'webapp:route_list' %}">経路一覧</a>
+</div>
+<table class="table table-striped table-bordered">
+    <form action="{% url 'webapp:expense_report' %}" method="post">
+        <tr>
+            {% for col in header %}
+            <th scope="col">
+                {{ col }}
+            </th>
+            {% endfor %}
+        </tr>
+        {% for form in formset %}
+        <tr>
+            <div class="col-sm-4">
+                {% for field in form %}
+                {% csrf_token %}
+                <td>
+                    {{ field }}
+                    {% if field == form.fare %}
+                    円
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </div>
+        </tr>
+        {% endfor %}
+        {{ formset.management_form }}
+        <tr>
+            <td><button type="submit" class="btn btn-primary">保存</button></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" name="date" value="{{ date }}" id="date"></td>
+        </tr>
+    </form>
+</table>
+{% endblock %}
+
+{% block extrajs %}{% endblock %}
